@@ -4,7 +4,11 @@ import { Filter } from './Filter/Filter';
 import { ContactList } from './ContactList/ContactList';
 import { nanoid } from 'nanoid';
 import Notiflix from 'notiflix'; 
-
+import { 
+  AppContainer,
+  AppHeader,
+  AppContacts,
+} from './App.styled';
 export class App extends Component {
   state = {
     contacts: [
@@ -22,7 +26,7 @@ export class App extends Component {
       this.setState({ contacts: contacts });
     }
   }
-  componentDidUpdate(prevProps, prevState) {
+  componentDidUpdate( prevState) {
     if (this.state.contacts !== prevState.contacts) {
       localStorage.setItem('contacts', JSON.stringify(this.state.contacts));
     }
@@ -67,15 +71,15 @@ export class App extends Component {
   render() {
     const visibleContacts = this.getVisibleContacts();
     return (
-      <div>
-        <h1>Phonebook</h1>
+      <AppContainer>
+        <AppHeader>Phonebook</AppHeader>
         <ContactForm onSubmit={this.formSubmitHandler} onAddContact={this.onAddContact} />
-        <h2>Contacts</h2>
+        <AppContacts>Contacts</AppContacts>
         <Filter onChange={this.changeFilter} />
         {this.state.contacts.length !== 0 && (
           <ContactList contacts={visibleContacts} onDelete={this.deleteContact} />
         )}
-      </div>
+      </AppContainer>
     );
   }
 }

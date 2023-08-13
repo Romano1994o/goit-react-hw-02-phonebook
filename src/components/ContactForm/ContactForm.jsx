@@ -1,57 +1,58 @@
-import { Component } from 'react';
+import React, { Component } from 'react';
+import { Formik } from 'formik';
+import * as Yup from 'yup';
+import {
+  StyledForm,
+  StyledLabel,
+  StyledInput,
+  StyledErrorMessage,
+  StyledSubmitButton,
+
+} from './ContactForm.styled';
+
+const initialValues = { name: '', number: '' };
+
+const ContactsValidation = Yup.object().shape({
+  name: Yup.string().required('* Name is required'),
+  number: Yup.string().min(6, 'Number must be at least 6 characters').max(10, 'Number must be at most 10 characters').required('* Number is required'),
+});
 
 export class ContactForm extends Component {
-  state = {
-    name: '',
-    number: '',
+  handleSubmit = (values, { resetForm }) => {
+    this.props.onSubmit(values);
+    resetForm();
   };
 
-  handleChange = event => {
-    this.setState({ [event.currentTarget.name]: event.currentTarget.value });
-  };
-
-  handleSubmit = event => {
-    event.preventDefault();
-    this.props.onSubmit(this.state);
-    this.formReset();
-  };
-
-  formReset = () => {
-    this.setState({
-      name: '',
-      number: '',
-    });
-  };
   render() {
     return (
-      <form onSubmit={this.handleSubmit}>
-        <label>
-          Name
-          <input
-            onChange={this.handleChange}
-            type="text"
-            name="name"
-            value={this.state.name}
-            pattern="^[a-zA-Zа-яА-Я]+(([' -][a-zA-Zа-яА-Я ])?[a-zA-Zа-яА-Я]*)*$"
-            title="Name may contain only letters, apostrophe, dash and spaces. For example Adrian, Jacob Mercer, Charles de Batz de Castelmore d'Artagnan"
-            required
-          />
-        </label>
-        <label>
-          Number
-          <input
-            onChange={this.handleChange}
-            type="tel"
-            name="number"
-            value={this.state.number}
-            pattern="\+?\d{1,4}?[-.\s]?\(?\d{1,3}?\)?[-.\s]?\d{1,4}[-.\s]?\d{1,4}[-.\s]?\d{1,9}"
-            title="Phone number must be digits and can contain spaces, dashes, parentheses and can start with +"
-            required
-          />
-        </label>
+      <Formik
+        initialValues={initialValues}
+        validationSchema={ContactsValidation}
+        onSubmit={this.handleSubmit}
+      >
+        {({ handleSubmit }) => (
+          <StyledForm onSubmit={handleSubmit}>
+            <StyledLabel>
+              Name
+              <StyledInput
+                type="text"
+                name="name"
+              />
+              <StyledErrorMessage name="name" component="div" />
+            </StyledLabel>
+            <StyledLabel>
+              Number
+              <StyledInput
+                type="tel"
+                name="number"
+              />
+              <StyledErrorMessage name="number" component="div" />
+            </StyledLabel>
 
-        <button type="submit">Add contact</button>
-      </form>
+            <StyledSubmitButton type="submit">Add contact</StyledSubmitButton>
+          </StyledForm>
+        )}
+      </Formik>
     );
   }
 }
