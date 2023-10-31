@@ -1,4 +1,4 @@
-# React homework template
+# React homework template.
 
 Acest proiect a fost creat cu ajutorul
 [Create React App](https://github.com/facebook/create-react-app). Pentru prezentări
